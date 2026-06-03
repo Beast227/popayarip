@@ -1,4 +1,4 @@
-# popayarip
+# gpatcher
 
 Game patch producer/consumer for pre-installed game archives (e.g. steamrip releases).
 
@@ -17,15 +17,15 @@ Generate a small binary patch between two extracted game versions, share it via 
 
 ### Global Installation (Recommended)
 
-You can install `popayarip` directly from any PowerShell terminal by running the following command:
+You can install `gpatcher` directly from any PowerShell terminal by running the following command:
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -Command "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; $z = Join-Path $env:TEMP 'pop-install.zip'; $d = Join-Path $env:TEMP 'pop-install-dir'; Invoke-WebRequest -Uri 'https://github.com/Beast227/popayarip/releases/download/v0.1/popayarip-v0.1-win64.zip' -OutFile $z; Expand-Archive -Path $z -DestinationPath $d -Force; & (Join-Path $d 'install.ps1'); Remove-Item $z -Force; Remove-Item $d -Recurse -Force"
+powershell -NoProfile -ExecutionPolicy Bypass -Command "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; $z = Join-Path $env:TEMP 'gpatcher-install.zip'; $d = Join-Path $env:TEMP 'gpatcher-install-dir'; Invoke-WebRequest -Uri 'https://github.com/Beast227/gpatcher/releases/download/v0.1/gpatcher-v0.1-win64.zip' -OutFile $z; Expand-Archive -Path $z -DestinationPath $d -Force; & (Join-Path $d 'install.ps1'); Remove-Item $z -Force; Remove-Item $d -Recurse -Force"
 ```
 
 *Alternatively, you can install manually:*
 
-1. Download the latest `popayarip-*-win64.zip` from the [GitHub Releases](https://github.com/Beast227/popayarip/releases) page.
+1. Download the latest `gpatcher-*-win64.zip` from the [GitHub Releases](https://github.com/Beast227/gpatcher/releases) page.
 2. Extract the ZIP file to any directory.
 3. Open a PowerShell terminal, navigate to the extracted folder, and run:
    ```powershell
@@ -33,12 +33,12 @@ powershell -NoProfile -ExecutionPolicy Bypass -Command "[Net.ServicePointManager
    ```
 4. Restart your terminal, and verify the installation:
    ```powershell
-   popayarip doctor
+   gpatcher doctor
    ```
 
 To uninstall at any time, run:
 ```powershell
-popayarip uninstall
+gpatcher uninstall
 # or from the extracted folder:
 .\install.ps1 -Uninstall
 ```
@@ -56,26 +56,26 @@ pip install internetarchive
 ia configure
 
 # 3. sanity-check
-.\popayarip.ps1 doctor
+.\gpatcher.ps1 doctor
 ```
 
 ## Usage
 
 ```
-popayarip create  --old <dir> --new <dir> --game <name> --old-ver <v> --new-ver <v> [--out <dir>]
-popayarip apply   --patch <path-or-url> --target <install-dir> [--dry-run] [--no-backup]
-popayarip restore --target <install-dir> [--backup <dir-or-latest>] [--keep-backup]
-popayarip upload  --patch <bundle.zip> [--creator <name>] [--description <text>]
-popayarip search  <game-name>
-popayarip fetch   --game <slug> --from <v> --to <v> [--out <dir>]
-popayarip verify  --install <dir> --against <manifest-or-bundle>
-popayarip doctor
+gpatcher create  --old <dir> --new <dir> --game <name> --old-ver <v> --new-ver <v> [--out <dir>]
+gpatcher apply   --patch <path-or-url> --target <install-dir> [--dry-run] [--no-backup]
+gpatcher restore --target <install-dir> [--backup <dir-or-latest>] [--keep-backup]
+gpatcher upload  --patch <bundle.zip> [--creator <name>] [--description <text>]
+gpatcher search  <game-name>
+gpatcher fetch   --game <slug> --from <v> --to <v> [--out <dir>]
+gpatcher verify  --install <dir> --against <manifest-or-bundle>
+gpatcher doctor
 ```
 
 ### Example: produce a patch
 
 ```powershell
-.\popayarip.ps1 create `
+.\gpatcher.ps1 create `
     --old "D:\Games\Hades_v1.38290" `
     --new "D:\Games\Hades_v1.38291" `
     --game "Hades" --old-ver 1.38290 --new-ver 1.38291 `
@@ -85,24 +85,24 @@ popayarip doctor
 ### Example: apply a patch
 
 ```powershell
-.\popayarip.ps1 apply `
+.\gpatcher.ps1 apply `
     --patch "D:\patches\hades_1.38290_to_1.38291.patch.zip" `
     --target "D:\Games\Hades"
 ```
 
-A backup of every file the patch will mutate is written to `<target>\.popayarip-backup-<timestamp>\`. Pass `--no-backup` to skip it.
+A backup of every file the patch will mutate is written to `<target>\.gpatcher-backup-<timestamp>\`. Pass `--no-backup` to skip it.
 
 ### Example: undo a patch with `restore`
 
 ```powershell
 # undo the most recent apply on this install
-.\popayarip.ps1 restore --target "D:\Games\Hades"
+.\gpatcher.ps1 restore --target "D:\Games\Hades"
 
 # undo a specific backup (full path or name relative to target)
-.\popayarip.ps1 restore --target "D:\Games\Hades" --backup .popayarip-backup-20260601153012
+.\gpatcher.ps1 restore --target "D:\Games\Hades" --backup .gpatcher-backup-20260601153012
 
 # undo but keep the backup dir around afterwards
-.\popayarip.ps1 restore --target "D:\Games\Hades" --keep-backup
+.\gpatcher.ps1 restore --target "D:\Games\Hades" --keep-backup
 ```
 
 `restore` walks the manifest stashed inside the backup dir, deletes files that `apply` had added, copies backed-up files back over modified/deleted ones, and verifies every restored file matches the original old-version hashes. The backup dir is removed by default after a successful restore; use `--keep-backup` to retain it.
@@ -112,10 +112,10 @@ Restore refuses to run if the target no longer matches the post-apply state reco
 ### Example: share via Internet Archive
 
 ```powershell
-.\popayarip.ps1 upload --patch "D:\patches\hades_1.38290_to_1.38291.patch.zip"
+.\gpatcher.ps1 upload --patch "D:\patches\hades_1.38290_to_1.38291.patch.zip"
 # others can then:
-.\popayarip.ps1 search hades
-.\popayarip.ps1 fetch --game hades --from 1.38290 --to 1.38291 --out .
+.\gpatcher.ps1 search hades
+.\gpatcher.ps1 fetch --game hades --from 1.38290 --to 1.38291 --out .
 ```
 
 ## Constraints
@@ -139,7 +139,7 @@ Builds two synthetic install trees, creates a patch, applies it, hash-compares t
 ```json
 {
   "schema": 1,
-  "tool": "popayarip 0.1",
+  "tool": "gpatcher 0.1",
   "game": "Hades",
   "game_slug": "hades",
   "old_version": "1.38290",

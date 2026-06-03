@@ -11,7 +11,7 @@ function Invoke-Restore {
 
     $backupDir = $null
     if (-not $Backup -or $Backup -eq 'latest') {
-        $candidates = @(Get-ChildItem -LiteralPath $Target -Filter '.popayarip-backup-*' -Directory -Force |
+        $candidates = @(Get-ChildItem -LiteralPath $Target -Filter '.gpatcher-backup-*' -Directory -Force |
                        Sort-Object Name -Descending)
         if ($candidates.Count -eq 0) {
             throw "No backup dirs found in $Target"
@@ -29,9 +29,9 @@ function Invoke-Restore {
     }
     LogInfo "Backup: $backupDir"
 
-    $manifestPath = Join-Path $backupDir '.popayarip-manifest.json'
+    $manifestPath = Join-Path $backupDir '.gpatcher-manifest.json'
     if (-not (Test-Path -LiteralPath $manifestPath)) {
-        throw "Backup is missing .popayarip-manifest.json -- cannot restore (likely created before restore support)."
+        throw "Backup is missing .gpatcher-manifest.json -- cannot restore (likely created before restore support)."
     }
     $m = Read-ManifestFile -Path $manifestPath
     LogInfo "Restoring $($m.game): $($m.new_version) -> $($m.old_version)"

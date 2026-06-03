@@ -27,7 +27,7 @@ function Invoke-Create {
     $newMap = @{}
     foreach ($f in $new) { $newMap[$f.RelPath] = $f }
 
-    $staging = New-TempDir 'popayarip-create'
+    $staging = New-TempDir 'gpatcher-create'
     LogInfo "Staging: $staging"
 
     $diffDir = Join-Path $staging 'diff'

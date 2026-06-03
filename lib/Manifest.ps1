@@ -19,7 +19,7 @@ function New-Manifest {
     )
     [pscustomobject]@{
         schema          = 1
-        tool            = 'popayarip 0.1'
+        tool            = 'gpatcher 0.1'
         game            = $Game
         game_slug       = (Get-GameSlug $Game)
         old_version     = $OldVersion

@@ -3,7 +3,7 @@ Set-StrictMode -Version 3.0
 $ErrorActionPreference = 'Stop'
 
 $root     = Split-Path -Parent $PSScriptRoot
-$cli      = Join-Path $root 'popayarip.ps1'
+$cli      = Join-Path $root 'gpatcher.ps1'
 $fixtures = Join-Path $root 'tests\fixtures'
 $v1       = Join-Path $fixtures 'v1'
 $v2       = Join-Path $fixtures 'v2'
@@ -127,14 +127,14 @@ Run-Test 'Restore from backup undoes apply' {
     & $cli apply --patch $bundle.FullName --target $workR
     if ($LASTEXITCODE -ne 0) { throw "apply (with backup) failed (exit $LASTEXITCODE)" }
 
-    $bk = @(Get-ChildItem -LiteralPath $workR -Filter '.popayarip-backup-*' -Directory -Force)
+    $bk = @(Get-ChildItem -LiteralPath $workR -Filter '.gpatcher-backup-*' -Directory -Force)
     if ($bk.Count -eq 0) { throw "no backup dir was created" }
     Write-Host "  backup: $($bk[0].Name)"
 
     & $cli restore --target $workR
     if ($LASTEXITCODE -ne 0) { throw "restore failed (exit $LASTEXITCODE)" }
 
-    $bk2 = @(Get-ChildItem -LiteralPath $workR -Filter '.popayarip-backup-*' -Directory -Force -ErrorAction SilentlyContinue)
+    $bk2 = @(Get-ChildItem -LiteralPath $workR -Filter '.gpatcher-backup-*' -Directory -Force -ErrorAction SilentlyContinue)
     if ($bk2.Count -ne 0) { throw "backup dir should have been removed after restore" }
 
     $hWork = Hash-Dir $workR
@@ -151,7 +151,7 @@ Run-Test 'Restore --keep-backup retains backup dir' {
     if ($LASTEXITCODE -ne 0) { throw "apply failed" }
     & $cli restore --target $workK --keep-backup
     if ($LASTEXITCODE -ne 0) { throw "restore --keep-backup failed" }
-    $bk = @(Get-ChildItem -LiteralPath $workK -Filter '.popayarip-backup-*' -Directory -Force)
+    $bk = @(Get-ChildItem -LiteralPath $workK -Filter '.gpatcher-backup-*' -Directory -Force)
     if ($bk.Count -eq 0) { throw "backup dir should have been retained" }
 }
 

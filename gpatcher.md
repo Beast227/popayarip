@@ -1,8 +1,8 @@
-# claude.md — popayarip project context
+# gpatcher.md — gpatcher project context
 
 ## What is this project?
 
-**popayarip** is a Windows-only PowerShell (5.1+) CLI tool that produces and consumes binary delta patches for pre-installed game archives (e.g. steamrip releases). It lets someone with an older extracted game install upgrade to a newer version by downloading a small patch instead of re-downloading the entire game.
+**gpatcher** is a Windows-only PowerShell (5.1+) CLI tool that produces and consumes binary delta patches for pre-installed game archives (e.g. steamrip releases). It lets someone with an older extracted game install upgrade to a newer version by downloading a small patch instead of re-downloading the entire game.
 
 Patches are optionally shared via Internet Archive (`archive.org`).
 
@@ -18,8 +18,8 @@ Patches are optionally shared via Internet Archive (`archive.org`).
 ## Project structure
 
 ```
-popayarip/
-├── popayarip.ps1          # Main CLI entry point — argument parsing, command dispatch
+gpatcher/
+├── gpatcher.ps1          # Main CLI entry point — argument parsing, command dispatch
 ├── lib/
 │   ├── Common.ps1         # Logging (LogInfo/Warn/Err/Ok), path utilities, temp dirs, Format-Bytes, Assert-NotReparse
 │   ├── Hash.ps1           # Get-FileSha256 (per-file SHA-256), Get-MerkleRoot (deterministic root hash of a file tree)
@@ -47,7 +47,7 @@ popayarip/
 ## Key conventions
 
 - **Language**: Pure PowerShell 5.1+, no external modules. `Set-StrictMode -Version 3.0` and `$ErrorActionPreference = 'Stop'` everywhere.
-- **Dot-sourcing**: `popayarip.ps1` dot-sources all `lib/*.ps1` files at startup. The lib files are not standalone modules.
+- **Dot-sourcing**: `gpatcher.ps1` dot-sources all `lib/*.ps1` files at startup. The lib files are not standalone modules.
 - **Path handling**: All manifest paths use forward slashes (`/`). `ConvertTo-NativePath` converts them to backslashes for Windows filesystem operations. `Get-RelPath` produces forward-slash relative paths from a root.
 - **Hashing**: SHA-256 everywhere. `Get-FileSha256` returns lowercase hex. `Get-MerkleRoot` computes a deterministic root hash over sorted `path:hash\n` lines.
 - **Error handling**: Functions `throw` on failure. The main script catches at the top level, logs via `LogErr`, and exits with code 1.
@@ -60,7 +60,7 @@ popayarip/
 ```json
 {
   "schema": 1,
-  "tool": "popayarip 0.1",
+  "tool": "gpatcher 0.1",
   "game": "Hades",
   "game_slug": "hades",
   "old_version": "1.38290",
@@ -79,17 +79,17 @@ popayarip/
 
 ## Backup mechanism
 
-- `apply` creates `.popayarip-backup-<yyyyMMddHHmmss>/` inside the target directory.
+- `apply` creates `.gpatcher-backup-<yyyyMMddHHmmss>/` inside the target directory.
 - Backed-up files: those touched by `diff` and `delete` ops.
-- A copy of the manifest is stashed as `.popayarip-manifest.json` inside the backup dir.
+- A copy of the manifest is stashed as `.gpatcher-manifest.json` inside the backup dir.
 - On apply failure, automatic rollback copies backed-up files back.
 - `restore` uses the stashed manifest to fully undo the patch, then verifies old-version hashes.
 - `restore` refuses to run if the target has been modified since the patch was applied.
 
 ## Internet Archive integration
 
-- Item identifier format: `popayarip-<slug>-<oldver>-to-<newver>` (max 100 chars).
-- Subjects: `popayarip`, `game-patch`, `<slug>`, `version-<old>`, `version-<new>`.
+- Item identifier format: `gpatcher-<slug>-<oldver>-to-<newver>` (max 100 chars).
+- Subjects: `gpatcher`, `popayarip`, `game-patch`, `<slug>`, `version-<old>`, `version-<new>`.
 - Requires `ia` CLI tool (`pip install internetarchive` + `ia configure`).
 
 ## External dependency
@@ -108,4 +108,4 @@ popayarip/
 - Exact version matching required — a patch from v1.0→v1.2 cannot apply to v1.1.
 - No code signing or cryptographic identity — trust is based on the uploader's archive.org account.
 - Symlinks and junctions are rejected.
-- Tool version is hardcoded as `popayarip 0.1`.
+- Tool version is hardcoded as `gpatcher 0.1`.

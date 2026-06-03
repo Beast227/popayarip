@@ -10,7 +10,7 @@ function Invoke-Apply {
         throw "Target dir not found: $Target"
     }
 
-    $staging = New-TempDir 'popayarip-apply'
+    $staging = New-TempDir 'gpatcher-apply'
     try {
         $patchLocal = $PatchPath
         if ($PatchPath -match '^https?://') {
@@ -62,7 +62,7 @@ function Invoke-Apply {
 
         $backupDir = $null
         if (-not $NoBackup) {
-            $backupDir = Join-Path $Target ".popayarip-backup-$([DateTime]::UtcNow.ToString('yyyyMMddHHmmss'))"
+            $backupDir = Join-Path $Target ".gpatcher-backup-$([DateTime]::UtcNow.ToString('yyyyMMddHHmmss'))"
             New-Item -ItemType Directory -Path $backupDir -Force | Out-Null
             LogInfo "Backup: $backupDir"
             foreach ($op in $m.ops) {
@@ -75,7 +75,7 @@ function Invoke-Apply {
             }
             # Stash a copy of the manifest inside the backup so `restore` can
             # also undo `add` ops (which leave no backed-up file behind).
-            Write-ManifestFile -Manifest $m -Path (Join-Path $backupDir '.popayarip-manifest.json')
+            Write-ManifestFile -Manifest $m -Path (Join-Path $backupDir '.gpatcher-manifest.json')
         }
 
         try {
@@ -84,7 +84,7 @@ function Invoke-Apply {
                 switch ($op.op) {
                     'diff' {
                         $patchFile = Join-Path $unpacked (ConvertTo-NativePath $op.patch)
-                        $tmpOut    = "$tgt.popayarip-new"
+                        $tmpOut    = "$tgt.gpatcher-new"
                         Invoke-HPatchz -OldFile $tgt -PatchFile $patchFile -NewOut $tmpOut
                         if ((Get-FileSha256 $tmpOut) -ne $op.new_sha256) {
                             Remove-PathSafe $tmpOut

@@ -40,7 +40,7 @@ function Test-CommandExists {
 }
 
 function New-TempDir {
-    param([string]$Prefix = 'popayarip')
+    param([string]$Prefix = 'gpatcher')
     $base = [System.IO.Path]::GetTempPath()
     $name = "$Prefix-$([guid]::NewGuid().ToString('N').Substring(0,12))"
     $p = Join-Path $base $name

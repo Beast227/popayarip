@@ -1,18 +1,18 @@
 #requires -Version 5.1
 <#
 .SYNOPSIS
-    Installs popayarip to %LOCALAPPDATA%\popayarip and adds it to the user PATH.
+    Installs gpatcher to %LOCALAPPDATA%\gpatcher and adds it to the user PATH.
 .DESCRIPTION
     Copies all required files (scripts, binaries, CMD wrapper) to a permanent
     install directory and ensures it is on the user's PATH so you can run
-    'popayarip' from any terminal.
+    'gpatcher' from any terminal.
 .PARAMETER InstallDir
-    Override the default install location. Defaults to %LOCALAPPDATA%\popayarip.
+    Override the default install location. Defaults to %LOCALAPPDATA%\gpatcher.
 .PARAMETER Uninstall
-    Remove popayarip from the install directory and clean it from PATH.
+    Remove gpatcher from the install directory and clean it from PATH.
 #>
 param(
-    [string]$InstallDir = (Join-Path $env:LOCALAPPDATA 'popayarip'),
+    [string]$InstallDir = (Join-Path $env:LOCALAPPDATA 'gpatcher'),
     [switch]$Uninstall
 )
 
@@ -46,7 +46,7 @@ function Remove-FromUserPath {
 # --- Uninstall ---
 if ($Uninstall) {
     Write-Host ""
-    Write-Host "popayarip uninstall" -ForegroundColor Cyan
+    Write-Host "gpatcher uninstall" -ForegroundColor Cyan
     if (Test-Path -LiteralPath $InstallDir) {
         Remove-Item -LiteralPath $InstallDir -Recurse -Force
         Write-Host "  Removed: $InstallDir" -ForegroundColor Green
@@ -61,7 +61,7 @@ if ($Uninstall) {
 
 # --- Install ---
 Write-Host ""
-Write-Host "popayarip installer" -ForegroundColor Cyan
+Write-Host "gpatcher installer" -ForegroundColor Cyan
 Write-Host "  Source:  $PSScriptRoot" -ForegroundColor Gray
 Write-Host "  Target:  $InstallDir" -ForegroundColor Gray
 Write-Host ""
@@ -75,8 +75,8 @@ New-Item -ItemType Directory -Path $InstallDir -Force | Out-Null
 
 # Copy core files
 $filesToCopy = @(
-    'popayarip.ps1',
-    'popayarip.cmd'
+    'gpatcher.ps1',
+    'gpatcher.cmd'
 )
 foreach ($f in $filesToCopy) {
     $src = Join-Path $PSScriptRoot $f
@@ -111,6 +111,6 @@ Add-ToUserPath $InstallDir
 
 Write-Host ""
 Write-Host "  Installed! Restart your terminal, then run:" -ForegroundColor Green
-Write-Host "    popayarip doctor" -ForegroundColor White
-Write-Host "    popayarip help" -ForegroundColor White
+Write-Host "    gpatcher doctor" -ForegroundColor White
+Write-Host "    gpatcher help" -ForegroundColor White
 Write-Host ""
