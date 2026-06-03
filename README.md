@@ -20,7 +20,7 @@ Generate a small binary patch between two extracted game versions, share it via 
 You can install `gpatcher` directly from any PowerShell terminal by running the following command:
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -Command "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; $z = Join-Path $env:TEMP 'gpatcher-install.zip'; $d = Join-Path $env:TEMP 'gpatcher-install-dir'; Invoke-WebRequest -Uri 'https://github.com/Beast227/gpatcher/releases/download/v0.1/gpatcher-v0.1-win64.zip' -OutFile $z; Expand-Archive -Path $z -DestinationPath $d -Force; & (Join-Path $d 'install.ps1'); Remove-Item $z -Force; Remove-Item $d -Recurse -Force"
+powershell -NoProfile -ExecutionPolicy Bypass -Command '[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; $z = Join-Path $env:TEMP "gpatcher-install.zip"; $d = Join-Path $env:TEMP "gpatcher-install-dir"; Invoke-WebRequest -Uri "https://github.com/Beast227/gpatcher/releases/download/v0.1/gpatcher-v0.1-win64.zip" -OutFile $z; Expand-Archive -Path $z -DestinationPath $d -Force; & (Join-Path $d "install.ps1"); Remove-Item $z -Force; Remove-Item $d -Recurse -Force'
 ```
 
 *Alternatively, you can install manually:*
