@@ -61,9 +61,12 @@ ia configure
 
 ## Usage
 
+Running `gpatcher` with no arguments (or by double-clicking the cmd wrapper) launches the **Interactive TUI Dashboard**. You can also execute commands directly from the CLI:
+
 ```
-gpatcher create  --old <dir> --new <dir> --game <name> --old-ver <v> --new-ver <v> [--out <dir>]
-gpatcher apply   --patch <path-or-url> --target <install-dir> [--dry-run] [--no-backup]
+gpatcher ui
+gpatcher create  --old <dir> --new <dir> --game <name> --old-ver <v> --new-ver <v> [--out <dir>] [--exclude <patterns>]
+gpatcher apply   --patch <path-or-url-or-dir> --target <install-dir> [--dry-run] [--no-backup] [--keep-backup]
 gpatcher restore --target <install-dir> [--backup <dir-or-latest>] [--keep-backup]
 gpatcher upload  --patch <bundle.zip> [--creator <name>] [--description <text>]
 gpatcher search  <game-name>
@@ -72,6 +75,17 @@ gpatcher verify  --install <dir> --against <manifest-or-bundle>
 gpatcher doctor
 gpatcher update  [--force]
 ```
+
+### Interactive TUI Dashboard
+
+The dashboard provides a terminal interface with arrow key navigation to:
+- Apply a game patch (with toggle options for Dry Run and Backups)
+- Create a game patch with dynamic progress bars
+- Restore from any local stashed backups
+- Search & Fetch patch packages from the Internet Archive directly
+- Verify a game folder integrity against any manifest snapshot
+- Run system diagnostics (`doctor` check) and perform auto-updates
+
 
 ### Example: produce a patch
 
