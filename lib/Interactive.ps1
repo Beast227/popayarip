@@ -391,7 +391,7 @@ function Invoke-InteractiveMenu {
 
                 Write-Host "`n  > Searching..." -ForegroundColor Yellow
                 try {
-                    $out = & (Join-Path $PSScriptRoot 'gpatcher.ps1') search $query 2>&1
+                    $out = & (Join-Path (Get-ToolRoot) 'gpatcher.ps1') search $query 2>&1
                     $lines = ($out -split "`r?`n") | Where-Object { $_ -match 'Found: ((?:gpatcher|popayarip)-\S+)' }
                     
                     if ($lines.Count -eq 0) {
