@@ -22,8 +22,8 @@ function Draw-Header {
     Write-Host "  |   ____ ____   _  _____ ____ _   _ _____ ____           |" -ForegroundColor Magenta
     Write-Host "  |  / ___|  _ \ / \|_   _/ ___| | | | ____|  _ \          |" -ForegroundColor Magenta
     Write-Host "  | | |  _| |_) / _ \ | | | |   | |_| |  _| | |_) |        |" -ForegroundColor Magenta
-    Write-Host "  | | |_| |  __/ ___ \| | | |___|  _  | |___|  _ <         |" -ForegroundColor Magenta
-    Write-Host "  |  \____|_| /_/   \_\_|  \____|_| |_|_____|_| \_\  v$global:GPATCHER_VERSION   |" -ForegroundColor Magenta
+    Write-Host "  | | |_| |  __/ ___ \| | | |___|  _  | |___|  _ <       |" -ForegroundColor Magenta
+    Write-Host "  |  \____|_| /_/   \_\_|  \____|_| |_|_____|_| \_\  v$global:GPATCHER_VERSION  |" -ForegroundColor Magenta
     Write-Host "  |                                                        |" -ForegroundColor Magenta
     Write-Host "  |            Game Delta Patching Dashboard               |" -ForegroundColor Gray
     Write-Host "  +--------------------------------------------------------+" -ForegroundColor Magenta
