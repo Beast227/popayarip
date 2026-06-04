@@ -25,7 +25,7 @@ function Draw-Header {
     Write-Host "  | | |_| |  __/ ___ \| | | |___|  _  | |___|  _ <         |" -ForegroundColor Magenta
     Write-Host "  |  \____|_| /_/   \_\_|  \____|_| |_|_____|_| \_\  v$global:GPATCHER_VERSION   |" -ForegroundColor Magenta
     Write-Host "  |                                                        |" -ForegroundColor Magenta
-    Write-Host "  |        Game Delta Delta Delta Patching Dashboard       |" -ForegroundColor Gray
+    Write-Host "  |            Game Delta Patching Dashboard               |" -ForegroundColor Gray
     Write-Host "  +--------------------------------------------------------+" -ForegroundColor Magenta
 
     $doc = Get-DoctorCache
