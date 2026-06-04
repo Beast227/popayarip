@@ -16,16 +16,59 @@ function Clear-DoctorCache {
     $global:DoctorStatusCache = $null
 }
 
+function Get-LayoutWidth {
+    $w = 56
+    try {
+        $winWidth = $Host.UI.RawUI.WindowSize.Width
+        $w = $winWidth - 6
+        if ($w -lt 56) { $w = 56 }
+        if ($w -gt 80) { $w = 80 }
+    } catch {}
+    return $w
+}
+
+function Get-CenteredLine {
+    param([string]$Text, [int]$Width)
+    $padTotal = $Width - $Text.Length
+    if ($padTotal -le 0) { return $Text.Substring(0, $Width) }
+    $padLeft = [Math]::Floor($padTotal / 2)
+    $padRight = $padTotal - $padLeft
+    return (" " * $padLeft) + $Text + (" " * $padRight)
+}
+
+function Get-PaddedLine {
+    param([string]$Text, [int]$Width)
+    if ($Text.Length -ge $Width) { return $Text.Substring(0, $Width) }
+    return $Text + (" " * ($Width - $Text.Length))
+}
+
 function Draw-Header {
-    Write-Host "  +--------------------------------------------------------+" -ForegroundColor Magenta
-    Write-Host "  |   ____ ____   _  _____ ____ _   _ _____ ____           |" -ForegroundColor Magenta
-    Write-Host "  |  / ___|  _ \ / \|_   _/ ___| | | | ____|  _ \          |" -ForegroundColor Magenta
-    Write-Host "  | | |  _| |_) / _ \ | | | |   | |_| |  _| | |_) |        |" -ForegroundColor Magenta
-    Write-Host "  | | |_| |  __/ ___ \| | | |___|  _  | |___|  _ <         |" -ForegroundColor Magenta
-    Write-Host "  |  \____|_| /_/   \_\_|  \____|_| |_|_____|_| \_\  v$global:GPATCHER_VERSION  |" -ForegroundColor Magenta
-    Write-Host "  |                                                        |" -ForegroundColor Magenta
-    Write-Host "  |            Game Delta Patching Dashboard               |" -ForegroundColor Gray
-    Write-Host "  +--------------------------------------------------------+" -ForegroundColor Magenta
+    $w = Get-LayoutWidth
+    $border = "+" + ("-" * $w) + "+"
+    Write-Host "  $border" -ForegroundColor Magenta
+
+    $logoLines = @(
+        "   ____ ____   _  _____ ____ _   _ _____ ____           ",
+        "  / ___|  _ \ / \|_   _/ ___| | | | ____|  _ \          ",
+        " | |  _| |_) / _ \ | | | |   | |_| |  _| | |_) |        ",
+        " | |_| |  __/ ___ \| | | |___|  _  | |___|  _ <         ",
+        "  \____|_| /_/   \_\_|  \____|_| |_|_____|_| \_\  v$global:GPATCHER_VERSION  ",
+        "",
+        "            Game Delta Patching Dashboard               "
+    )
+
+    foreach ($line in $logoLines) {
+        $centered = Get-CenteredLine -Text $line -Width $w
+        Write-Host "  |" -NoNewline -ForegroundColor Magenta
+        if ($line -eq $logoLines[-1]) {
+            Write-Host $centered -NoNewline -ForegroundColor Gray
+        } else {
+            Write-Host $centered -NoNewline -ForegroundColor Magenta
+        }
+        Write-Host "|" -ForegroundColor Magenta
+    }
+
+    Write-Host "  $border" -ForegroundColor Magenta
 
     $doc = Get-DoctorCache
     $hdiffzStr = if ($doc.hdiffz) { "[OK] hdiffz" } else { "[ERR] hdiffz" }
@@ -47,12 +90,19 @@ function Draw-Header {
 
 function Draw-BoxTop {
     param([string]$Title)
-    $line = "-- $Title " + ("-" * (54 - $Title.Length))
+    $w = Get-LayoutWidth
+    $line = "-- $Title "
+    if ($line.Length -gt $w) {
+        $line = $line.Substring(0, $w)
+    } else {
+        $line = $line + ("-" * ($w - $line.Length))
+    }
     Write-Host "  +$line+" -ForegroundColor Cyan
 }
 
 function Draw-BoxBottom {
-    Write-Host "  +" + ("-" * 56) + "+" -ForegroundColor Cyan
+    $w = Get-LayoutWidth
+    Write-Host "  +" + ("-" * $w) + "+" -ForegroundColor Cyan
 }
 
 function Read-MenuSelection {
@@ -78,9 +128,15 @@ function Read-MenuSelection {
         } catch {}
 
         $lastSelectedIndex = -1
+        $lastWidth = -1
 
         while ($running) {
-            if ($selectedIndex -ne $lastSelectedIndex) {
+            $w = Get-LayoutWidth
+            if ($selectedIndex -ne $lastSelectedIndex -or $w -ne $lastWidth) {
+                if ($w -ne $lastWidth) {
+                    try { Clear-Host } catch {}
+                }
+
                 try {
                     $pos = $Host.UI.RawUI.CursorPosition
                     $pos.X = 0
@@ -94,13 +150,13 @@ function Read-MenuSelection {
                 for ($i = 0; $i -lt $Options.Count; $i++) {
                     if ($i -eq $selectedIndex) {
                         $optText = "  >  [ $($Options[$i]) ]"
-                        $padded = $optText.PadRight(56)
+                        $padded = Get-PaddedLine -Text $optText -Width $w
                         Write-Host "  |" -NoNewline -ForegroundColor Cyan
                         Write-Host $padded -NoNewline -BackgroundColor DarkMagenta -ForegroundColor White
                         Write-Host "|" -ForegroundColor Cyan
                     } else {
                         $optText = "     [ $($Options[$i]) ]"
-                        $padded = $optText.PadRight(56)
+                        $padded = Get-PaddedLine -Text $optText -Width $w
                         Write-Host "  |" -NoNewline -ForegroundColor Cyan
                         Write-Host $padded -NoNewline -ForegroundColor Gray
                         Write-Host "|" -ForegroundColor Cyan
@@ -109,6 +165,7 @@ function Read-MenuSelection {
                 
                 Draw-BoxBottom
                 $lastSelectedIndex = $selectedIndex
+                $lastWidth = $w
             }
 
             try {
@@ -144,12 +201,13 @@ function Read-MenuSelection {
     }
 
     # Non-interactive fallback
+    $w = Get-LayoutWidth
     try { Clear-Host } catch {}
     Draw-Header
     Draw-BoxTop -Title $Title
     for ($i = 0; $i -lt $Options.Count; $i++) {
         $optText = "   $($i + 1)) $($Options[$i])"
-        $padded = $optText.PadRight(56)
+        $padded = Get-PaddedLine -Text $optText -Width $w
         Write-Host "  |$padded|" -ForegroundColor Cyan
     }
     Draw-BoxBottom
