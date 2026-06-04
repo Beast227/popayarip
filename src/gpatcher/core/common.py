@@ -3,7 +3,7 @@ import sys
 import shutil
 import tempfile
 
-GPATCHER_VERSION = '0.3.0'
+GPATCHER_VERSION = '0.3.1'
 
 # Console text colors (ANSI Escape Codes)
 class Colors:

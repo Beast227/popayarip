@@ -3,7 +3,7 @@ import os
 import shutil
 import time
 import re
-from gpatcher.core.common import Colors, get_bin_path, get_app_data_dir, log_info, log_ok, log_warn, log_err
+from gpatcher.core.common import GPATCHER_VERSION, Colors, get_bin_path, get_app_data_dir, log_info, log_ok, log_warn, log_err
 from gpatcher.core.apply import invoke_apply
 from gpatcher.core.create import invoke_create
 from gpatcher.core.restore import invoke_restore
@@ -133,7 +133,7 @@ def draw_header():
         "  / ___|  _ \\ / \\|_   _/ ___| | | | ____|  _ \\          ",
         " | |  _| |_) / _ \\ | | | |   | |_| |  _| | |_) |        ",
         " | |_| |  __/ ___ \\| | | |___|  _  | |___|  _ <         ",
-        "  \\____|_| /_/   \\_\\_|  \\____|_| |_|_____|_| \\_\\  v0.3.0  ",
+        f"  \\____|_| /_/   \\_\\_|  \\____|_| |_|_____|_| \\_\\  v{GPATCHER_VERSION}  ",
         "",
         "            Game Delta Patching Dashboard               "
     ]
