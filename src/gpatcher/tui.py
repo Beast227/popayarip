@@ -322,7 +322,8 @@ def read_path_input(prompt: str, must_exist: bool = False, is_directory: bool = 
         if not val:
             print(f"  |   {Colors.RED}[err] Path cannot be empty!{Colors.RESET}")
             continue
-        resolved = os.path.abspath(os.path.expanduser(val))
+        clean_val = val.strip().strip('"').strip("'")
+        resolved = os.path.abspath(os.path.expanduser(clean_val))
         if must_exist:
             if not os.path.exists(resolved):
                 print(f"  |   {Colors.RED}[err] Path does not exist: {resolved}{Colors.RESET}")
