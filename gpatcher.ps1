@@ -13,6 +13,7 @@ $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'lib\Restore.ps1')
 . (Join-Path $PSScriptRoot 'lib\IA.ps1')
 . (Join-Path $PSScriptRoot 'lib\Update.ps1')
+. (Join-Path $PSScriptRoot 'lib\Interactive.ps1')
 
 function Show-Usage {
 @'
@@ -27,7 +28,8 @@ Usage:
   gpatcher fetch   --game <slug> --from <v> --to <v> [--out <dir>]
   gpatcher verify  --install <dir> --against <manifest-or-bundle>
   gpatcher doctor
-  gpatcher ui
+  gpatcher ui      -- start interactive console UI
+  gpatcher webui   -- start web UI dashboard
   gpatcher update  [--force]
   gpatcher uninstall
   gpatcher help
@@ -151,7 +153,7 @@ function Invoke-Verify {
 }
 
 if ($args.Count -eq 0) {
-    Show-Usage
+    Invoke-InteractiveMenu
     exit 0
 }
 $cmd  = $args[0]
@@ -212,7 +214,8 @@ try {
                 -Against (Get-RequiredFlag $parsed.Flags 'against')
         }
         'doctor' { Invoke-Doctor }
-        'ui' {
+        'ui' { Invoke-InteractiveMenu }
+        'webui' {
             if (-not (Test-CommandExists 'node')) {
                 throw "Node.js is required to run the web UI. Please install it from https://nodejs.org/"
             }

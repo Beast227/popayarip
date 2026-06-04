@@ -32,7 +32,8 @@ gpatcher/
 │   ├── Apply.ps1          # Invoke-Apply — patch application with pre-flight verification, backup, and rollback
 │   ├── Restore.ps1        # Invoke-Restore — undo an applied patch from backup
 │   ├── IA.ps1             # Invoke-IAUpload / Invoke-IASearch / Invoke-IAFetch — Internet Archive integration
-│   └── Update.ps1         # Invoke-Update — automatically update gpatcher from GitHub releases
+│   ├── Update.ps1         # Invoke-Update — automatically update gpatcher from GitHub releases
+│   └── Interactive.ps1    # Invoke-InteractiveMenu — interactive console dashboard UI (TUI)
 ├── bin/
 │   ├── hdiffz.exe         # Binary diff tool (from HDiffPatch, fetched by tools/fetch-hdiffpatch.ps1)
 │   └── hpatchz.exe        # Binary patch tool (from HDiffPatch)
