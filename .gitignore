@@ -18,4 +18,6 @@ src/*.egg-info/
 build/
 dist/
 
-venv
+.venv
+gpatcher_architecture_guide.md
+requirements.txt
